@@ -63,7 +63,10 @@ class ProtocolHandler {
         val arr = ArrayList<BigInteger>(k)
         for (i in 1 until k) {
             var temp = BigInteger(k, rand)
-            while ( (temp.compareTo(p) == 0) || (temp.compareTo(q) == 0) || (temp.compareTo(BigInteger("0")) == 0)) {
+            while ((temp.compareTo(p) == 0) || (temp.compareTo(q) == 0) || (temp.compareTo(
+                    BigInteger.ZERO
+                ) == 0)
+            ) {
                 temp = BigInteger(k, rand)
             }
             arr[i] = temp
