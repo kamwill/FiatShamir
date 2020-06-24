@@ -46,16 +46,16 @@ class ProtocolHandler {
 
     //TODO
     fun generatePublicKey(privateKey: List<BigInteger>): List<BigInteger> {
-        val arr = ArrayList<BigInteger>(k)
-        for ((j, sj) in privateKey.withIndex()) {
+        val list = mutableListOf<BigInteger>()
+        for (sj in privateKey) {
             var temp = sj.modPow(BigInteger("2"), n)
             temp = temp.modInverse(n)
             if (rand.nextBoolean()) {
                 temp = temp.negate().mod(n)
             }
-            arr[j] = temp
+            list.add(temp)
         }
-        return arr.toList()
+        return list
     }
 
     //TODO
