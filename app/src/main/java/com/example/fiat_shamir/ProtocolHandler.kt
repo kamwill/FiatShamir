@@ -3,7 +3,9 @@ package com.example.fiat_shamir
 import android.util.Log
 import java.math.BigInteger
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.ln
+import kotlin.properties.Delegates
 
 const val bits = 20
 const val cert = 0
@@ -11,7 +13,7 @@ const val cert = 0
 
 class ProtocolHandler {
     private val rand = Random()
-    private lateinit var k: BigInteger
+    private var k by Delegates.notNull<Int>()
     private lateinit var n: BigInteger
     private lateinit var p: BigInteger
     private lateinit var q: BigInteger
@@ -36,19 +38,37 @@ class ProtocolHandler {
         Log.e(TAG, "found q: $q")
 
         n = p.multiply(q)
-        k = ln(n.toDouble()).toBigDecimal().toBigInteger()
+        //k = ln(n.toDouble()).toBigDecimal().toBigInteger()
+        k = n.bitLength().toBigInteger().bitLength()
         return n
     }
 
 
     //TODO
-    fun generatePublicKey(): List<BigInteger> {
-        return emptyList()
+    fun generatePublicKey(privateKey: List<BigInteger>): List<BigInteger> {
+        val arr = ArrayList<BigInteger>(k)
+        for ((j, sj) in privateKey.withIndex()) {
+            var temp = sj.modPow(BigInteger("2"), n)
+            temp = temp.modInverse(n)
+            if (rand.nextBoolean()) {
+                temp = temp.negate().mod(n)
+            }
+            arr[j] = temp
+        }
+        return arr.toList()
     }
 
     //TODO
-    fun generatePrivateKey(publicKey: List<BigInteger>): List<BigInteger> {
-        return emptyList()
+    fun generatePrivateKey(): List<BigInteger> {
+        val arr = ArrayList<BigInteger>(k)
+        for (i in 1 until k) {
+            var temp = BigInteger(k, rand)
+            while ( (temp.compareTo(p) == 0) || (temp.compareTo(q) == 0) || (temp.compareTo(BigInteger("0")) == 0)) {
+                temp = BigInteger(k, rand)
+            }
+            arr[i] = temp
+        }
+        return arr.toList()
     }
 
 
