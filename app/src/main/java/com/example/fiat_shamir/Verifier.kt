@@ -15,6 +15,7 @@ class Verifier : AppCompatActivity() {
 
     private lateinit var btService: MyBluetoothService
     private lateinit var n: BigInteger
+    private lateinit var pubKey: List<BigInteger>
 
     private val mHandler = Handler(Handler.Callback { msg ->
         when (msg.what) {
@@ -53,6 +54,10 @@ class Verifier : AppCompatActivity() {
             } else {
                 showToast("Prover tries to send another N. We won't allow it!")
             }
+        }
+
+        if ("pubKey:" in msg) {
+            pubKeyReceived(msg)
         } else {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
@@ -65,6 +70,17 @@ class Verifier : AppCompatActivity() {
             n = BigInteger(matcher.group(1)!!)
             showToast("Verifier sent n: $n")
         }
+    }
+
+    private fun pubKeyReceived(msg: String) {
+        val tmp = mutableListOf<BigInteger>()
+        val p = Pattern.compile("\\d+")
+        val m = p.matcher(msg)
+        while (m.find()) {
+            tmp.add(m.group().toBigInteger())
+        }
+        pubKey = tmp
+        showToast("N and PubKey are obtained.")
     }
 
     private fun showToast(msg: String) {

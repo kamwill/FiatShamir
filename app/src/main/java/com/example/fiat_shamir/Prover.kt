@@ -57,8 +57,8 @@ class Prover : AppCompatActivity() {
             Log.e(TAG, " privKey: $privKey")
 
 
-            //pubKey = protocol.generatePublicKey(privKey)
-            //Log.e(TAG, " pubKey: $pubKey")
+            pubKey = protocol.generatePublicKey(privKey)
+            Log.e(TAG, " pubKey: $pubKey")
 
             btService.write("Prover is connected")
 
