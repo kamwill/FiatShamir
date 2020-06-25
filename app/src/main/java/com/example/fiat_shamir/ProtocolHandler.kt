@@ -44,7 +44,7 @@ class ProtocolHandler {
     }
 
 
-    //TODO
+    //DONE
     fun generatePublicKey(privateKey: List<BigInteger>): List<BigInteger> {
         val list = mutableListOf<BigInteger>()
         for (sj in privateKey) {
@@ -58,7 +58,7 @@ class ProtocolHandler {
         return list
     }
 
-    //TODO
+    //DONE
     fun generatePrivateKey(): List<BigInteger> {
         val list = mutableListOf<BigInteger>()
         for (i in 1..k) {
@@ -83,21 +83,45 @@ class ProtocolHandler {
     //TODO
     //Musi zadeklarować lateinit R
     fun calcX(): BigInteger {
-        return BigInteger.ONE
+        r = BigInteger(k, rand)
+        while (r.compareTo(BigInteger.ZERO) == 0) {
+            r = BigInteger(k, rand)
+        }
+        var X = r.modPow(BigInteger("2"), n)
+        if (rand.nextBoolean()) {
+            X = X.negate().mod(n)
+        }
+        return X
     }
 
     //TODO
-    fun generateVector(): List<Boolean> {
-        return emptyList()
+    fun generateVector(k: Int): List<Boolean> {
+        val vector = mutableListOf<Boolean>()
+        for (i in 1..k) {
+            vector.add(rand.nextBoolean())
+        }
+        return vector
     }
 
     //TODO
-    fun calcY(privKey: List<BigInteger>): BigInteger {
-        return BigInteger.ONE
+    fun calcY(privKey: List<BigInteger>, vector: List<Boolean>): BigInteger {
+        var y = r
+        for ((index, bool) in vector.withIndex()) {
+            if (bool) {
+                y = y.multiply(privKey[index]).mod(n)
+            }
+        }
+        return y
     }
 
     //TODO
-    fun verify(x: BigInteger, y: BigInteger, publicKey: List<BigInteger>, n: BigInteger): Boolean {
-        return false
+    fun verify(x: BigInteger, y: BigInteger, publicKey: List<BigInteger>, n: BigInteger, vector: List<Boolean>): Boolean {
+        var temp = y.modPow(BigInteger("2"), n)
+        for ((index, bool) in vector.withIndex()) {
+            if (bool) {
+                temp = temp.multiply(publicKey[index]).mod(n)
+            }
+        }
+        return (x == temp) || (x == temp.negate().mod(n))
     }
 }
