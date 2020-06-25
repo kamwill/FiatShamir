@@ -40,6 +40,7 @@ class ProtocolHandler {
         n = p.multiply(q)
         //k = ln(n.toDouble()).toBigDecimal().toBigInteger()
         k = n.bitLength().toBigInteger().bitLength()
+        k = (k..2*k).random()
         return n
     }
 
@@ -75,12 +76,13 @@ class ProtocolHandler {
     }
 
 
-    //TODO
-    fun calcT(): BigInteger {
-        return BigInteger.ONE
+    //DONE
+    fun calcT(n: BigInteger): Int {
+        var t = n.bitLength()
+        return (t..2*t).random()
     }
 
-    //TODO
+    //DONE
     //Musi zadeklarować lateinit R
     fun calcX(): BigInteger {
         r = BigInteger(k, rand)
@@ -94,16 +96,16 @@ class ProtocolHandler {
         return X
     }
 
-    //TODO
+    //DONE
     fun generateVector(k: Int): List<Boolean> {
         val vector = mutableListOf<Boolean>()
         for (i in 1..k) {
-            vector.add(rand.nextBoolean())
+            vector.add(Random().nextBoolean())
         }
         return vector
     }
 
-    //TODO
+    //DONE
     fun calcY(privKey: List<BigInteger>, vector: List<Boolean>): BigInteger {
         var y = r
         for ((index, bool) in vector.withIndex()) {
@@ -114,7 +116,7 @@ class ProtocolHandler {
         return y
     }
 
-    //TODO
+    //DONE
     fun verify(x: BigInteger, y: BigInteger, publicKey: List<BigInteger>, n: BigInteger, vector: List<Boolean>): Boolean {
         var temp = y.modPow(BigInteger("2"), n)
         for ((index, bool) in vector.withIndex()) {
