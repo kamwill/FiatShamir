@@ -67,17 +67,20 @@ class Verifier : AppCompatActivity() {
         val pattern: Pattern = Pattern.compile("n: (.*)")
         val matcher: Matcher = pattern.matcher(msg)
         if (matcher.find()) {
-            n = BigInteger(matcher.group(1)!!)
-            showToast("Verifier sent n: $n")
+            var g = matcher.group(1)
+            n = g.toBigInteger()
+            Log.e(TAG, "Verifier sent n: $n")
         }
     }
 
     private fun pubKeyReceived(msg: String) {
         val tmp = mutableListOf<BigInteger>()
-        val p = Pattern.compile("\\d+")
+        val p = Pattern.compile("-?\\d+")
         val m = p.matcher(msg)
         while (m.find()) {
-            tmp.add(m.group().toBigInteger())
+            var t = m.group()
+            var t_int = t.toBigInteger()
+            tmp.add(t_int)
         }
         pubKey = tmp
         showToast("N and PubKey are obtained.")

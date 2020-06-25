@@ -196,8 +196,6 @@ class MyBluetoothService(
         socketBT = socket
         connectedThread = ConnectedThread(socketBT)
         connectedThread.start()
-
-
     }
 
 

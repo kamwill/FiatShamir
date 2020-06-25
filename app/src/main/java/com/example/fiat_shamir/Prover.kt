@@ -54,16 +54,17 @@ class Prover : AppCompatActivity() {
             showToast("Generated n: $n")
 
             privKey = protocol.generatePrivateKey()
-            Log.e(TAG, " privKey: $privKey")
+            Log.e(TAG, "privKey: $privKey")
 
 
             pubKey = protocol.generatePublicKey(privKey)
-            Log.e(TAG, " pubKey: $pubKey")
+            Log.e(TAG, "pubKey: $pubKey")
 
             btService.write("Prover is connected")
 
             sendN.setOnClickListener {
                 btService.write("n: $n")
+                Log.e(TAG, "n sent")
                 btService.write("pubKey: $pubKey")
             }
         }
