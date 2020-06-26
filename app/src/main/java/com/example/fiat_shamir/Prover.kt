@@ -25,7 +25,7 @@ class Prover : AppCompatActivity() {
             MESSAGE_READ -> {
                 val readBuf = msg.obj as ByteArray
                 val readMessage = String(readBuf, 0, msg.arg1)
-                showToast(readMessage)
+                handleMessage(readMessage)
             }
 
             MESSAGE_CONNECTION -> {
@@ -67,6 +67,14 @@ class Prover : AppCompatActivity() {
                 Log.e(TAG, "n sent")
                 btService.write("pubKey: $pubKey")
             }
+        }
+    }
+
+    private fun handleMessage(msg: String) {
+        if ("Start verification" == msg) {
+            protocolStatusPr.text = "Started"
+            val x = protocol.calcX()
+            btService.write("x: $x")
         }
     }
 

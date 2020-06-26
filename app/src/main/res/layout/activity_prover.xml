@@ -33,4 +33,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/protocol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Protocol Status"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/protocolStatusPr" />
+
+    <TextView
+        android:id="@+id/protocolStatusPr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text=" Waiting to start verification"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toEndOf="@+id/sendN"
+        app:layout_constraintStart_toStartOf="@+id/sendN"
+        app:layout_constraintTop_toBottomOf="@+id/sendN" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

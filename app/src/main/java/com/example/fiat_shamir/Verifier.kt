@@ -16,6 +16,12 @@ class Verifier : AppCompatActivity() {
     private lateinit var btService: MyBluetoothService
     private lateinit var n: BigInteger
     private lateinit var pubKey: List<BigInteger>
+    private lateinit var x: BigInteger
+
+    var t = 0
+    var tmpT = 0
+
+    private val protocol = ProtocolHandler()
 
     private val mHandler = Handler(Handler.Callback { msg ->
         when (msg.what) {
@@ -45,6 +51,10 @@ class Verifier : AppCompatActivity() {
         btService.manageMyConnectedSocket(socket)
         btService.write("Verifier is connected")
 
+        start.setOnClickListener {
+            startVerification()
+        }
+
     }
 
     private fun handleReadMsg(msg: String) {
@@ -58,8 +68,10 @@ class Verifier : AppCompatActivity() {
 
         if ("pubKey:" in msg) {
             pubKeyReceived(msg)
-        } else {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        }
+
+        if ("x: " in msg) {
+            xReceived(msg)
         }
     }
 
@@ -67,7 +79,7 @@ class Verifier : AppCompatActivity() {
         val pattern: Pattern = Pattern.compile("n: (.*)")
         val matcher: Matcher = pattern.matcher(msg)
         if (matcher.find()) {
-            var g = matcher.group(1)
+            val g = matcher.group(1)
             n = g.toBigInteger()
             Log.e(TAG, "Verifier sent n: $n")
         }
@@ -78,12 +90,32 @@ class Verifier : AppCompatActivity() {
         val p = Pattern.compile("-?\\d+")
         val m = p.matcher(msg)
         while (m.find()) {
-            var t = m.group()
-            var t_int = t.toBigInteger()
-            tmp.add(t_int)
+            val t = m.group()
+            val tInt = t.toBigInteger()
+            tmp.add(tInt)
         }
         pubKey = tmp
         showToast("N and PubKey are obtained.")
+    }
+
+    private fun xReceived(msg: String) {
+        val pattern: Pattern = Pattern.compile("x: (.*)")
+        val matcher: Matcher = pattern.matcher(msg)
+        if (matcher.find()) {
+            val g = matcher.group(1)
+            x = g.toBigInteger()
+            Log.e(TAG, "Verifier sent x: $x")
+        }
+
+        val v = protocol.generateVector()
+
+        btService.write("vector: $v")
+    }
+
+    private fun startVerification() {
+        t = protocol.calcT(n)
+        btService.write("Start verification")
+        protocolStatusVer.text = "t: $tmpT"
     }
 
     private fun showToast(msg: String) {

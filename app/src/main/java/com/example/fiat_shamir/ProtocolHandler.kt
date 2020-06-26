@@ -3,8 +3,6 @@ package com.example.fiat_shamir
 import android.util.Log
 import java.math.BigInteger
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.math.ln
 import kotlin.properties.Delegates
 
 const val bits = 20
@@ -38,7 +36,6 @@ class ProtocolHandler {
         Log.e(TAG, "found q: $q")
 
         n = p.multiply(q)
-        //k = ln(n.toDouble()).toBigDecimal().toBigInteger()
         k = n.bitLength().toBigInteger().bitLength()
         k = (k..2*k).random()
         return n
@@ -78,7 +75,7 @@ class ProtocolHandler {
 
     //DONE
     fun calcT(n: BigInteger): Int {
-        var t = n.bitLength()
+        val t = n.bitLength()
         return (t..2*t).random()
     }
 
@@ -97,7 +94,7 @@ class ProtocolHandler {
     }
 
     //DONE
-    fun generateVector(k: Int): List<Boolean> {
+    fun generateVector(): List<Boolean> {
         val vector = mutableListOf<Boolean>()
         for (i in 1..k) {
             vector.add(Random().nextBoolean())
