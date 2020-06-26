@@ -17,9 +17,10 @@ class Verifier : AppCompatActivity() {
     private lateinit var n: BigInteger
     private lateinit var pubKey: List<BigInteger>
     private lateinit var x: BigInteger
+    private lateinit var v: List<Boolean>
 
     var t = 0
-    var tmpT = 0
+    private var tmpT = 0
 
     private val protocol = ProtocolHandler()
 
@@ -64,15 +65,25 @@ class Verifier : AppCompatActivity() {
             } else {
                 showToast("Prover tries to send another N. We won't allow it!")
             }
+            return
         }
 
         if ("pubKey:" in msg) {
             pubKeyReceived(msg)
+            return
         }
 
         if ("x: " in msg) {
             xReceived(msg)
+            return
         }
+
+        if ("y: " in msg) {
+            yReceived(msg)
+            return
+        }
+
+        showToast(msg)
     }
 
     private fun nReceived(msg: String) {
@@ -107,9 +118,35 @@ class Verifier : AppCompatActivity() {
             Log.e(TAG, "Verifier sent x: $x")
         }
 
-        val v = protocol.generateVector()
+        v = protocol.generateVector(pubKey.size)
+        Log.e(TAG, "vector: $v")
 
         btService.write("vector: $v")
+    }
+
+    private fun yReceived(msg: String) {
+        var y = BigInteger.ONE
+        val pattern: Pattern = Pattern.compile("y: (.*)")
+        val matcher: Matcher = pattern.matcher(msg)
+        if (matcher.find()) {
+            val g = matcher.group(1)
+            y = g.toBigInteger()
+        }
+
+        val result = protocol.verify(x, y, pubKey, n, v)
+
+        if (result) {
+            if (tmpT <= t) {
+                tmpT += 1
+                protocolStatusVer.text = ("t: $tmpT")
+                btService.write("Start verification")
+            } else {
+                protocolStatusVer.text = "Verification succeeded"
+                btService.write("Verification succeeded")
+            }
+        } else {
+            protocolStatusVer.text = "Verification failed"
+        }
     }
 
     private fun startVerification() {

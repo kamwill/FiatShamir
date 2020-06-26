@@ -38,6 +38,7 @@ class ProtocolHandler {
         n = p.multiply(q)
         k = n.bitLength().toBigInteger().bitLength()
         k = (k..2*k).random()
+        Log.e(TAG, "k: $k")
         return n
     }
 
@@ -94,7 +95,8 @@ class ProtocolHandler {
     }
 
     //DONE
-    fun generateVector(): List<Boolean> {
+    fun generateVector(k: Int): List<Boolean> {
+        Log.e(TAG, "k: $k")
         val vector = mutableListOf<Boolean>()
         for (i in 1..k) {
             vector.add(Random().nextBoolean())

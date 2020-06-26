@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_prover.*
 import java.math.BigInteger
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class Prover : AppCompatActivity() {
     private lateinit var btService: MyBluetoothService
@@ -16,6 +18,7 @@ class Prover : AppCompatActivity() {
 
     private val protocol = ProtocolHandler()
     var n = BigInteger("0")
+    var t = 0
 
     private val mHandler = Handler(Handler.Callback { msg ->
         when (msg.what) {
@@ -72,10 +75,33 @@ class Prover : AppCompatActivity() {
 
     private fun handleMessage(msg: String) {
         if ("Start verification" == msg) {
-            protocolStatusPr.text = "Started"
+            protocolStatusPr.text = "t: $t"
+            t++
             val x = protocol.calcX()
             btService.write("x: $x")
         }
+        if ("vector: " in msg) {
+            vectorReceived(msg)
+        }
+        if ("succeeded" in msg) {
+            protocolStatusPr.text = msg
+        }
+    }
+
+    private fun vectorReceived(msg: String) {
+        val v = mutableListOf<Boolean>()
+        val p = Pattern.compile("(true|false)")
+        val m = p.matcher(msg)
+        while (m.find()) {
+            val t = m.group()
+            val tBool = t.toBoolean()
+            v.add(tBool)
+        }
+
+        val y = protocol.calcY(privKey, v)
+        Log.e(TAG, "vector received: $v")
+        btService.write("y: $y")
+
     }
 
     private fun getDevice(): BluetoothDevice {
