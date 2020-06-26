@@ -3,6 +3,8 @@ package com.example.fiat_shamir
 import android.util.Log
 import java.math.BigInteger
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlin.properties.Delegates
 
 const val bits = 20
@@ -16,6 +18,19 @@ class ProtocolHandler {
     private lateinit var p: BigInteger
     private lateinit var q: BigInteger
     private lateinit var r: BigInteger
+
+    companion object {
+        fun regexFind(pat: String, s: String): String {
+            val pattern: Pattern = Pattern.compile(pat)
+            val matcher: Matcher = pattern.matcher(s)
+            return if (matcher.find()) {
+                val g = matcher.group(1)
+                g!!
+            } else {
+                ""
+            }
+        }
+    }
 
 
     fun generateN(): BigInteger {

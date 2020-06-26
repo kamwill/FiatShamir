@@ -87,13 +87,10 @@ class Verifier : AppCompatActivity() {
     }
 
     private fun nReceived(msg: String) {
-        val pattern: Pattern = Pattern.compile("n: (.*)")
-        val matcher: Matcher = pattern.matcher(msg)
-        if (matcher.find()) {
-            val g = matcher.group(1)
-            n = g.toBigInteger()
-            Log.e(TAG, "Verifier sent n: $n")
-        }
+        val tmp = ProtocolHandler.regexFind("n: (.*)", msg)
+        n = tmp.toBigInteger()
+
+        Log.e(TAG, "Verifier sent n: $n")
     }
 
     private fun pubKeyReceived(msg: String) {
@@ -110,13 +107,9 @@ class Verifier : AppCompatActivity() {
     }
 
     private fun xReceived(msg: String) {
-        val pattern: Pattern = Pattern.compile("x: (.*)")
-        val matcher: Matcher = pattern.matcher(msg)
-        if (matcher.find()) {
-            val g = matcher.group(1)
-            x = g.toBigInteger()
-            Log.e(TAG, "Verifier sent x: $x")
-        }
+        val tmp = ProtocolHandler.regexFind("x: (.*)", msg)
+        x = tmp.toBigInteger()
+        Log.e(TAG, "Verifier sent x: $x")
 
         v = protocol.generateVector(pubKey.size)
         Log.e(TAG, "vector: $v")
@@ -125,21 +118,17 @@ class Verifier : AppCompatActivity() {
     }
 
     private fun yReceived(msg: String) {
-        var y = BigInteger.ONE
-        val pattern: Pattern = Pattern.compile("y: (.*)")
-        val matcher: Matcher = pattern.matcher(msg)
-        if (matcher.find()) {
-            val g = matcher.group(1)
-            y = g.toBigInteger()
-        }
+        val tmp = ProtocolHandler.regexFind("y: (.*)", msg)
+        val y = tmp.toBigInteger()
 
         val result = protocol.verify(x, y, pubKey, n, v)
 
         if (result) {
             if (tmpT <= t) {
                 tmpT += 1
-                protocolStatusVer.text = ("t: $tmpT")
-                btService.write("Start verification")
+                val tmp1 = "t: $tmpT"
+                protocolStatusVer.text = tmp1
+                btService.write(tmp1)
             } else {
                 protocolStatusVer.text = "Verification succeeded"
                 btService.write("Verification succeeded")
@@ -150,9 +139,10 @@ class Verifier : AppCompatActivity() {
     }
 
     private fun startVerification() {
+        val tmp = "t: $tmpT"
         t = protocol.calcT(n)
-        btService.write("Start verification")
-        protocolStatusVer.text = "t: $tmpT"
+        btService.write(tmp)
+        protocolStatusVer.text = tmp
     }
 
     private fun showToast(msg: String) {

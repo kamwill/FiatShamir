@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_prover.*
 import java.math.BigInteger
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class Prover : AppCompatActivity() {
@@ -18,7 +17,6 @@ class Prover : AppCompatActivity() {
 
     private val protocol = ProtocolHandler()
     var n = BigInteger("0")
-    var t = 0
 
     private val mHandler = Handler(Handler.Callback { msg ->
         when (msg.what) {
@@ -54,7 +52,6 @@ class Prover : AppCompatActivity() {
 
         generateKeys.setOnClickListener {
             n = protocol.generateN()
-            showToast("Generated n: $n")
 
             privKey = protocol.generatePrivateKey()
             Log.e(TAG, "privKey: $privKey")
@@ -63,7 +60,7 @@ class Prover : AppCompatActivity() {
             pubKey = protocol.generatePublicKey(privKey)
             Log.e(TAG, "pubKey: $pubKey")
 
-            btService.write("Prover is connected")
+            showToast("Keys generated")
 
             sendN.setOnClickListener {
                 btService.write("n: $n")
@@ -74,9 +71,8 @@ class Prover : AppCompatActivity() {
     }
 
     private fun handleMessage(msg: String) {
-        if ("Start verification" == msg) {
-            protocolStatusPr.text = "t: $t"
-            t++
+        if ("t: " in msg) {
+            protocolStatusPr.text = msg
             val x = protocol.calcX()
             btService.write("x: $x")
         }
@@ -94,7 +90,7 @@ class Prover : AppCompatActivity() {
         val m = p.matcher(msg)
         while (m.find()) {
             val t = m.group()
-            val tBool = t.toBoolean()
+            val tBool = t!!.toBoolean()
             v.add(tBool)
         }
 

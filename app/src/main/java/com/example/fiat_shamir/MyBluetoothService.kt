@@ -37,7 +37,7 @@ class MyBluetoothService(
     }
 
 
-    val myUUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9b67")
+    val myUUID: UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9b67")
 
 
     fun write(msg: String) {
@@ -80,14 +80,6 @@ class MyBluetoothService(
             }
         }
 
-        // Closes the connect socket and causes the thread to finish.
-        fun cancel() {
-            try {
-                mmServerSocket?.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "Could not close the connect socket", e)
-            }
-        }
     }
 
     private inner class ConnectThread(device: BluetoothDevice) : Thread() {
@@ -118,14 +110,6 @@ class MyBluetoothService(
             }
         }
 
-        // Closes the client socket and causes the thread to finish.
-        fun cancel() {
-            try {
-                mmSocket?.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "Could not close the client socket", e)
-            }
-        }
     }
 
 
@@ -183,13 +167,6 @@ class MyBluetoothService(
         }
 
         // Call this method from the main activity to shut down the connection.
-        fun cancel() {
-            try {
-                mmSocket.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "Could not close the connect socket", e)
-            }
-        }
     }
 
     fun manageMyConnectedSocket(socket: BluetoothSocket) {
