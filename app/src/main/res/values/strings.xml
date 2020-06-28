@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Fiat-Shamir</string>
     <string name="action_settings">Settings</string>
+    <string name="title_name">FFS Identification App</string>
+    <string name="menu_string">Please choose Verifier device to start:</string>
+    <string name="prover_title">Protocol role: Prover</string>
+    <string name="connection_status">Connection Status:</string>
+    <string name="protocol_act">Protocol Actions</string>
+    <string name="protocol_status">Protocol Status:</string>
+    <string name="verifier_title">Protocol role: Verifier</string>
+    <string name="ver_action">Protocol Action:</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

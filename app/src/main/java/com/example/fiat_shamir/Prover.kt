@@ -1,6 +1,7 @@
 package com.example.fiat_shamir
 
 import android.bluetooth.BluetoothDevice
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -39,6 +40,7 @@ class Prover : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
         setContentView(R.layout.activity_prover)
 
         btService = MyBluetoothService(mHandler)
