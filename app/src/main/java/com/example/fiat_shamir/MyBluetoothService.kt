@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.util.Log
 import java.io.IOException
 import java.io.InputStream
@@ -146,6 +147,7 @@ class MyBluetoothService(
             try {
                 mmOutStream.write(bytes)
                 Log.e(TAG, "sent")
+                SystemClock.sleep(10);
             } catch (e: IOException) {
                 Log.e(TAG, "Error occurred when sending data", e)
 

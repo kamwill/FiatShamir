@@ -7,7 +7,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.properties.Delegates
 
-const val bits = 20
+const val bits = 128
 const val cert = 0
 
 
