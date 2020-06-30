@@ -147,7 +147,7 @@ class MyBluetoothService(
             try {
                 mmOutStream.write(bytes)
                 Log.e(TAG, "sent")
-                SystemClock.sleep(10);
+                SystemClock.sleep(50);
             } catch (e: IOException) {
                 Log.e(TAG, "Error occurred when sending data", e)
 
